@@ -13,11 +13,15 @@ class EventsViewModel: ObservableObject {
     private var totalPages: Int?
 
     @Published var events: [Event] = []
+    @Published var isLoading = false
 
     func fetchEvents() async {
         if let totalPages = totalPages {
             guard currentPage < totalPages else { return }
         }
+        
+        isLoading = true
+        defer { isLoading = false }
 
         do {
             let parameters = ["page": String(currentPage)]
@@ -25,7 +29,11 @@ class EventsViewModel: ObservableObject {
             let response: EventsResponse = try await NetworkManager.shared.fetchData(api: apiConstructor)
             
             self.totalPages = response.page.totalPages
-            self.events = response.embedded.events
+            if currentPage == 0 {
+                self.events = response.embedded.events
+            } else {
+                self.events.append(contentsOf: response.embedded.events)
+            }
         } catch {
             //TODO: error handling
             print(error.localizedDescription)
@@ -33,12 +41,13 @@ class EventsViewModel: ObservableObject {
     }
     
     func fetchNextPage() async {
-        currentPage += 1
+        self.currentPage += 1
         await fetchEvents()
     }
     
     func refresh() async {
-        currentPage = 0
+        self.events = []
+        self.currentPage = 0
         await fetchEvents()
     }
 }

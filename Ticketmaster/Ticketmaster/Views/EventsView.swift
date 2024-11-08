@@ -12,8 +12,30 @@ struct EventsView: View {
 
     var body: some View {
         VStack {
-            List(viewModel.events) { event in
-                Text(event.name)
+            List {
+                ForEach(viewModel.events) { event in
+                    Text(event.name)
+                        .onAppear {
+                            if event.id == viewModel.events.last?.id {
+                                Task {
+                                    await viewModel.fetchNextPage()
+                                }
+                            }
+                        }
+                }
+
+                if viewModel.isLoading {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                }
+            }
+            .refreshable {
+                Task {
+                    await viewModel.refresh()
+                }
             }
         }
         .task {
