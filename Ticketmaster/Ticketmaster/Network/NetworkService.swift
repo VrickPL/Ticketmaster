@@ -7,8 +7,17 @@
 
 import Foundation
 
-enum NetworkServiceError: Error {
-    case invalidResponse
+enum NetworkServiceError: LocalizedError {
+    case invalidResponse(statusCode: Int), invalidApiKey
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidResponse(let statusCode):
+            return "Invalid response from server (status code: \(statusCode))"
+        case .invalidApiKey:
+            return "Invalid ApiKey.\nPlease check your configuration in Ticketmaster/Network/NetworkKey.swift."
+        }
+    }
 }
 
 actor NetworkService {
@@ -16,13 +25,17 @@ actor NetworkService {
         let url = try DefaultUrlBuilder.build(api: api)
         let (data, response) = try await URLSession.shared.data(from: url)
 
-        guard let response = response as? HTTPURLResponse,
-              response.statusCode >= 200, response.statusCode < 300 else {
-            throw NetworkServiceError.invalidResponse
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NetworkServiceError.invalidResponse(statusCode: 0)
         }
         
-        print(url.absoluteString)
-
-        return try JSONDecoder().decode(T.self, from: data)
+        switch httpResponse.statusCode {
+        case 200..<300:
+            return try JSONDecoder().decode(T.self, from: data)
+        case 401:
+            throw NetworkServiceError.invalidApiKey
+        default:
+            throw NetworkServiceError.invalidResponse(statusCode: httpResponse.statusCode)
+        }
     }
 }

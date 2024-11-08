@@ -16,6 +16,7 @@ class EventsViewModel: ObservableObject {
 
     @Published var events: [Event] = []
     @Published var isLoading = false
+    @Published var error: Error?
 
     func fetchEvents() async {
         if let totalPages = totalPages {
@@ -40,8 +41,7 @@ class EventsViewModel: ObservableObject {
                 self.events.append(contentsOf: response.embedded.events)
             }
         } catch {
-            //TODO: error handling
-            print(error.localizedDescription)
+            self.error = error
         }
     }
     

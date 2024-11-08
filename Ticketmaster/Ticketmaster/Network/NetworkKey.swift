@@ -20,6 +20,6 @@ struct NetworkKey {
             }
         }
 
-        return "YOUR_API_KEY"
+        return "YOUR_API_KEY" // <--- Add your api key here
     }
 }

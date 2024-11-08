@@ -12,44 +12,84 @@ struct EventsView: View {
 
     var body: some View {
         NavigationView {
-            List {
-                if viewModel.isLoading && viewModel.events.isEmpty {
-                    ForEach(0..<5) { _ in
-                        SkeletonEventView()
-                            .listRowSeparator(.hidden)
-                    }
-                } else {
-                    ForEach(viewModel.events) { event in
-                        SingleEventView(event: event)
-                            .onAppear {
-                                if event.id == viewModel.events.last?.id {
-                                    Task {
-                                        await viewModel.fetchNextPage()
+            if let error = viewModel.error {
+                ErrorView(error: error, onButtonClick: fetchEvents)
+            } else {
+                List {
+                    if viewModel.isLoading && viewModel.events.isEmpty {
+                        ForEach(0..<5) { _ in
+                            SkeletonEventView()
+                                .listRowSeparator(.hidden)
+                        }
+                    } else {
+                        ForEach(viewModel.events) { event in
+                            SingleEventView(event: event)
+                                .onAppear {
+                                    if event.id == viewModel.events.last?.id {
+                                        fetchNextPage()
                                     }
                                 }
+                                .listRowSeparator(.hidden)
+                        }
+                        
+                        if viewModel.isLoading {
+                            HStack {
+                                Spacer()
+                                ProgressView()
+                                Spacer()
                             }
-                            .listRowSeparator(.hidden)
+                        }
                     }
                 }
-            }
-            .listStyle(.inset)
-            .refreshable {
-                Task {
-                    await viewModel.refresh()
+                .listStyle(.inset)
+                .refreshable {
+                    refresh()
                 }
-            }
-            .navigationTitle("Events in Poland")
-
-            if viewModel.isLoading {
-                HStack {
-                    Spacer()
-                    ProgressView()
-                    Spacer()
-                }
+                .navigationTitle("Events in Poland")
             }
         }
         .task {
             await viewModel.fetchEvents()
+        }
+    }
+    
+    private func fetchEvents() {
+        Task {
+            await viewModel.fetchEvents()
+        }
+    }
+    
+    private func fetchNextPage() {
+        Task {
+            await viewModel.fetchNextPage()
+        }
+    }
+    
+    private func refresh() {
+        Task {
+            await viewModel.refresh()
+        }
+    }
+    
+    private struct ErrorView: View {
+        let error: Error
+        var onButtonClick: () -> Void
+        
+        var body: some View {
+            VStack {
+                Spacer()
+                Text("Oops, something went wrong!")
+                    .font(.title3)
+
+                Button("Try again") {
+                    onButtonClick()
+                }
+                .font(.title2)
+                Spacer()
+                
+                Text(error.localizedDescription)
+                    .foregroundStyle(.red)
+            }
         }
     }
 }
