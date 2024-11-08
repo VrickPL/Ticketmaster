@@ -25,7 +25,7 @@ enum DefaultUrlBuilder {
         return url
     }
 
-    static func buildQueryParams(_ params: Parameters...) -> [URLQueryItem] {
+    private static func buildQueryParams(_ params: Parameters...) -> [URLQueryItem] {
         params.flatMap { $0 }.map {
             URLQueryItem(name: $0.key, value: $0.value)
         }
