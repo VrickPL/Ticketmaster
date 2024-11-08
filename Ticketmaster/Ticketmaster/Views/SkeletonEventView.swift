@@ -10,11 +10,23 @@ import SwiftUI
 struct SkeletonEventView: View {
     @State private var isAnimating = false
     
+    private var screenWidth: CGFloat {
+        UIScreen.main.bounds.width
+    }
+    
+    private var photoWidth: CGFloat {
+        screenWidth * 9 / 10
+    }
+    
+    private var photoHeight: CGFloat {
+        photoWidth * 2 / 3
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Rectangle()
                 .fill(Color.gray.opacity(0.2))
-                .frame(height: 250)
+                .frame(height: photoHeight)
                 .roundedCorner(12, corners: [.topLeft, .topRight])
             
             VStack(alignment: .leading, spacing: 8) {

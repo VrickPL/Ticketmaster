@@ -11,6 +11,18 @@ struct SingleEventView: View {
     @Environment(\.colorScheme) var colorScheme
     let event: Event
     
+    private var screenWidth: CGFloat {
+        UIScreen.main.bounds.width
+    }
+    
+    private var photoWidth: CGFloat {
+        screenWidth * 9 / 10
+    }
+    
+    private var photoHeight: CGFloat {
+        photoWidth * 2 / 3
+    }
+    
     private var isDarkScheme: Bool {
         colorScheme == .dark
     }
@@ -38,7 +50,7 @@ struct SingleEventView: View {
                         ProgressView()
                     }
                 }
-                .frame(height: 250)
+                .frame(height: photoHeight)
                 .clipped()
                 .roundedCorner(12, corners: [.topLeft, .topRight])
             }
