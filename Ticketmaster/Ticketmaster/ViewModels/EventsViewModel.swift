@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 class EventsViewModel: ObservableObject {
-    private let COUNTRY_CODE: String = "PL"
+    private static let COUNTRY_CODE: String = "PL"
 
     private var currentPage = 0
     private var totalPages: Int?
@@ -27,7 +27,7 @@ class EventsViewModel: ObservableObject {
 
         do {
             let parameters = [
-                "countryCode": COUNTRY_CODE,
+                "countryCode": EventsViewModel.COUNTRY_CODE,
                 "page": String(currentPage)
             ]
             let apiConstructor = ApiConstructor(endpoint: Endpoint.events, parameters: parameters)

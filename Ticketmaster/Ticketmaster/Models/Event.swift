@@ -31,13 +31,45 @@ struct Event: Codable, Identifiable {
     let id: String
     let name: String
     let dates: Dates
-    let place: Place?
-    let images: [Image]?
+    let embedded: Embedded2?
+    let images: [ImageDecodable]?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case dates
+        case embedded = "_embedded"
+        case images
+    }
 
-    var date: String? { dates.start.localDate }
-    var city: String? { place?.city.name }
-    var venue: String? { place?.venue.name }
-    var imageUrl: String? { images?.first?.url }
+    var date: String? {
+        guard let localDate = dates.start.localDate else { return nil }
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "yyyy-MM-dd"
+        
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "dd.MM.yyyy"
+        
+        if let date = inputFormatter.date(from: localDate) {
+            return outputFormatter.string(from: date)
+        }
+        
+        return nil
+    }
+    var city: String? { embedded?.venues.first?.city?.name }
+    var venue: String? { embedded?.venues.first?.name }
+    
+    func getImageUrl(for ratio: String? = nil) -> String? {
+        if let ratio = ratio, let image = images?.first(where: { $0.ratio == ratio }) {
+            return image.url
+        }
+        
+        return images?.first?.url
+    }
+}
+
+struct Embedded2: Codable {
+    let venues: [Venue]
 }
 
 struct Dates: Codable {
@@ -48,19 +80,16 @@ struct Start: Codable {
     let localDate: String?
 }
 
-struct Place: Codable {
-    let city: City
-    let venue: Venue
-}
-
 struct City: Codable {
     let name: String
 }
 
 struct Venue: Codable {
-    let name: String
+    let name: String?
+    let city: City?
 }
 
-struct Image: Codable {
+struct ImageDecodable: Codable {
+    let ratio: String?
     let url: String
 }

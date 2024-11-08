@@ -20,6 +20,8 @@ actor NetworkService {
               response.statusCode >= 200, response.statusCode < 300 else {
             throw NetworkServiceError.invalidResponse
         }
+        
+        print(url.absoluteString)
 
         return try JSONDecoder().decode(T.self, from: data)
     }

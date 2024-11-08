@@ -14,7 +14,7 @@ struct EventsView: View {
         VStack {
             List {
                 ForEach(viewModel.events) { event in
-                    Text(event.name)
+                    SingleEventView(event: event)
                         .onAppear {
                             if event.id == viewModel.events.last?.id {
                                 Task {
@@ -22,19 +22,21 @@ struct EventsView: View {
                                 }
                             }
                         }
-                }
-
-                if viewModel.isLoading {
-                    HStack {
-                        Spacer()
-                        ProgressView()
-                        Spacer()
-                    }
+                        .listRowSeparator(.hidden)
                 }
             }
+            .listStyle(.inset)
             .refreshable {
                 Task {
                     await viewModel.refresh()
+                }
+            }
+
+            if viewModel.isLoading {
+                HStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
                 }
             }
         }
