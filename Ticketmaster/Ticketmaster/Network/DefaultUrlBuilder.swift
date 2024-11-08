@@ -17,7 +17,7 @@ enum DefaultUrlBuilder {
             throw DefaultUrlBuilderError.invalidPath
         }
 
-        urlComponentes.queryItems = buildQueryParams(api.parameters, ["api_key": NetworkKey.apiKey])
+        urlComponentes.queryItems = buildQueryParams(api.parameters, ["apikey": NetworkKey.apiKey])
         guard let url = urlComponentes.url else {
             throw DefaultUrlBuilderError.invalidUrl
         }
