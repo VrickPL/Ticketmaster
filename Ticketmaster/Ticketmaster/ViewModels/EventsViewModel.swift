@@ -9,6 +9,8 @@ import Foundation
 
 @MainActor
 class EventsViewModel: ObservableObject {
+    private let COUNTRY_CODE: String = "PL"
+
     private var currentPage = 0
     private var totalPages: Int?
 
@@ -24,7 +26,10 @@ class EventsViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            let parameters = ["page": String(currentPage)]
+            let parameters = [
+                "countryCode": COUNTRY_CODE,
+                "page": String(currentPage)
+            ]
             let apiConstructor = ApiConstructor(endpoint: Endpoint.events, parameters: parameters)
             let response: EventsResponse = try await NetworkManager.shared.fetchData(api: apiConstructor)
             
