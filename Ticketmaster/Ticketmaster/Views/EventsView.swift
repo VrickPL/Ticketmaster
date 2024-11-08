@@ -11,18 +11,25 @@ struct EventsView: View {
     @StateObject private var viewModel = EventsViewModel()
 
     var body: some View {
-        VStack {
+        NavigationView {
             List {
-                ForEach(viewModel.events) { event in
-                    SingleEventView(event: event)
-                        .onAppear {
-                            if event.id == viewModel.events.last?.id {
-                                Task {
-                                    await viewModel.fetchNextPage()
+                if viewModel.isLoading && viewModel.events.isEmpty {
+                    ForEach(0..<5) { _ in
+                        SkeletonEventView()
+                            .listRowSeparator(.hidden)
+                    }
+                } else {
+                    ForEach(viewModel.events) { event in
+                        SingleEventView(event: event)
+                            .onAppear {
+                                if event.id == viewModel.events.last?.id {
+                                    Task {
+                                        await viewModel.fetchNextPage()
+                                    }
                                 }
                             }
-                        }
-                        .listRowSeparator(.hidden)
+                            .listRowSeparator(.hidden)
+                    }
                 }
             }
             .listStyle(.inset)
@@ -31,6 +38,7 @@ struct EventsView: View {
                     await viewModel.refresh()
                 }
             }
+            .navigationTitle("Events in Poland")
 
             if viewModel.isLoading {
                 HStack {
