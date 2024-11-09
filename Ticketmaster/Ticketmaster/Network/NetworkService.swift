@@ -15,7 +15,7 @@ enum NetworkServiceError: LocalizedError {
         case .invalidResponse(let statusCode):
             return "Invalid response from server (status code: \(statusCode))"
         case .invalidApiKey:
-            return "Invalid ApiKey.\nPlease check your configuration in Ticketmaster/Network/NetworkKey.swift."
+            return "Invalid ApiKey.\nPlease check your configuration in Ticketmaster/Network/NetworkKey.swift"
         }
     }
 }
@@ -24,6 +24,7 @@ actor NetworkService {
     func fetchData<T: Decodable>(api: ApiConstructor) async throws -> T {
         let url = try DefaultUrlBuilder.build(api: api)
         let (data, response) = try await URLSession.shared.data(from: url)
+        
 
         guard let httpResponse = response as? HTTPURLResponse else {
             throw NetworkServiceError.invalidResponse(statusCode: 0)

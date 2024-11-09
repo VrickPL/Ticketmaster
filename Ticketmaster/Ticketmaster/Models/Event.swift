@@ -78,6 +78,7 @@ struct Dates: Codable {
 
 struct Start: Codable {
     let localDate: String?
+    let localTime: String?
 }
 
 struct City: Codable {

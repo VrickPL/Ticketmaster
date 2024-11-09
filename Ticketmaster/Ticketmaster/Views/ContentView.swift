@@ -10,7 +10,8 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         VStack {
-            EventsView()
+//            EventsView()
+            EventDetailsView(id: "Z698xZQpZ16v-90S1o")
         }
     }
 }

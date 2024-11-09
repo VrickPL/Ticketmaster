@@ -119,7 +119,7 @@ struct SingleEventView: View {
     SingleEventView(event: Event(
         id: "Z698xZQpZ16v-90S1o",
         name: "Rafał Pacześ - ProkuraTOUR'a - nowy program Stand-UP",
-        dates: Dates(start: Start(localDate: "2024-11-09")),
+        dates: Dates(start: Start(localDate: "2024-11-09", localTime: nil)),
         embedded: Embedded2(
             venues: [Venue(
                 name: "Centrum Tradycji Hutnictwa",
