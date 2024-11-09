@@ -25,13 +25,13 @@ struct EventsView: View {
                         }
                     } else {
                         ForEach(viewModel.events) { event in
-                            SingleEventView(event: event)
-                                .onAppear {
-                                    if event.id == viewModel.events.last?.id {
-                                        fetchNextPage()
-                                    }
+                            EventRowView(event: event) {
+                                if event.id == viewModel.events.last?.id {
+                                    fetchNextPage()
                                 }
-                                .listRowSeparator(.hidden)
+                            }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color(.systemBackground))
                         }
                         
                         if let error = viewModel.error {
@@ -97,6 +97,22 @@ struct EventsView: View {
             }
         }
     }
+    
+    private struct EventRowView: View {
+            let event: Event
+            let onAppear: () -> Void
+            
+            var body: some View {
+                ZStack {
+                    SingleEventView(event: event)
+                        .onAppear(perform: onAppear)
+                    
+                    NavigationLink(destination: EventDetailsView(id: event.id)) {
+                        EmptyView()
+                    }.opacity(0.0)
+                }
+            }
+        }
 }
 
 #Preview {
