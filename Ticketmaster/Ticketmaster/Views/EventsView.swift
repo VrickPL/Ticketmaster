@@ -12,8 +12,10 @@ struct EventsView: View {
 
     var body: some View {
         NavigationView {
-            if let error = viewModel.error {
-                ErrorView(error: error, onButtonClick: fetchEvents)
+            if let error = viewModel.error, viewModel.events.isEmpty {
+                ErrorView(error: error) {
+                    fetchEvents()
+                }
             } else {
                 List {
                     if viewModel.isLoading && viewModel.events.isEmpty {
@@ -32,7 +34,9 @@ struct EventsView: View {
                                 .listRowSeparator(.hidden)
                         }
                         
-                        if viewModel.isLoading {
+                        if let error = viewModel.error {
+                            ErrorView(error: error, onButtonClick: fetchEvents)
+                        } else if viewModel.isLoading {
                             HStack {
                                 Spacer()
                                 ProgressView()
@@ -84,6 +88,7 @@ struct EventsView: View {
                 Button("Try again") {
                     onButtonClick()
                 }
+                .foregroundStyle(.blue)
                 .font(.title2)
                 Spacer()
                 

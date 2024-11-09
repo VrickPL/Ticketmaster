@@ -40,6 +40,8 @@ class EventsViewModel: ObservableObject {
             } else {
                 self.events.append(contentsOf: response.embedded.events)
             }
+            
+            self.error = nil
         } catch {
             self.error = error
         }

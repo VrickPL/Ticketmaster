@@ -11,18 +11,6 @@ struct SingleEventView: View {
     @Environment(\.colorScheme) var colorScheme
     let event: Event
     
-    private var screenWidth: CGFloat {
-        UIScreen.main.bounds.width
-    }
-    
-    private var photoWidth: CGFloat {
-        screenWidth * 9 / 10
-    }
-    
-    private var photoHeight: CGFloat {
-        photoWidth * 2 / 3
-    }
-    
     private var isDarkScheme: Bool {
         colorScheme == .dark
     }
@@ -37,23 +25,7 @@ struct SingleEventView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            if let imageUrl = event.getImageUrl(for: "3_2") {
-                AsyncImage(url: URL(string: imageUrl)) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } placeholder: {
-                    ZStack {
-                        Rectangle()
-                            .foregroundColor(.gray.opacity(0.2))
-                        
-                        ProgressView()
-                    }
-                }
-                .frame(height: photoHeight)
-                .clipped()
-                .roundedCorner(12, corners: [.topLeft, .topRight])
-            }
+            EventImageView(imageUrl: event.getImageUrl(for: "3_2"))
             
             VStack(alignment: .leading, spacing: 8) {
                 Text(event.name)
@@ -62,33 +34,15 @@ struct SingleEventView: View {
                     .lineLimit(2)
                 
                 if let date = event.date, !date.isEmpty {
-                    Label {
-                        Text(date)
-                            .foregroundColor(.secondary)
-                    } icon: {
-                        Image(systemName: "calendar")
-                            .foregroundColor(.primary)
-                    }
+                    EventInfoRow(icon: "calendar", text: date)
                 }
                 
                 if let venue = event.venue, !venue.isEmpty {
-                    Label {
-                        Text(venue)
-                            .foregroundColor(.secondary)
-                    } icon: {
-                        Image(systemName: "mappin.and.ellipse")
-                            .foregroundColor(.primary)
-                    }
+                    EventInfoRow(icon: "mappin.and.ellipse", text: venue)
                 }
                 
                 if let city = event.city, !city.isEmpty {
-                    Label {
-                        Text(city)
-                            .foregroundColor(.secondary)
-                    } icon: {
-                        Image(systemName: "building.2")
-                            .foregroundColor(.primary)
-                    }
+                    EventInfoRow(icon: "building.2", text: city)
                 }
             }
             .padding(.horizontal)
@@ -101,6 +55,63 @@ struct SingleEventView: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(cardStrokeColor, lineWidth: 1)
         )
+    }
+    
+    private struct EventImageView: View {
+        let imageUrl: String?
+        
+        private var screenWidth: CGFloat {
+            UIScreen.main.bounds.width
+        }
+        
+        private var height: CGFloat {
+            screenWidth * 3 / 5
+        }
+        
+        var body: some View {
+            VStack {
+                if let imageUrl = imageUrl {
+                    AsyncImage(url: URL(string: imageUrl)) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    } placeholder: {
+                        ImagePlaceholder()
+                    }
+                } else {
+                    ImagePlaceholder()
+                }
+            }
+            .frame(height: height)
+            .clipped()
+            .roundedCorner(12, corners: [.topLeft, .topRight])
+        }
+        
+        private struct ImagePlaceholder: View {
+            var body: some View {
+                ZStack {
+                    Rectangle()
+                        .foregroundColor(.gray.opacity(0.2))
+                    
+                    ProgressView()
+                }
+            }
+        }
+    }
+    
+    private struct EventInfoRow: View {
+        let icon: String
+        let text: String
+        
+        var body: some View {
+            Label {
+                Text(text)
+                    .foregroundColor(.secondary)
+            } icon: {
+                Image(systemName: icon)
+                    .foregroundColor(.primary)
+            }
+        }
     }
 }
 

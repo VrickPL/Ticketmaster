@@ -14,19 +14,15 @@ struct SkeletonEventView: View {
         UIScreen.main.bounds.width
     }
     
-    private var photoWidth: CGFloat {
-        screenWidth * 9 / 10
-    }
-    
-    private var photoHeight: CGFloat {
-        photoWidth * 2 / 3
+    private var height: CGFloat {
+        screenWidth * 3 / 5
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Rectangle()
                 .fill(Color.gray.opacity(0.2))
-                .frame(height: photoHeight)
+                .frame(height: height)
                 .roundedCorner(12, corners: [.topLeft, .topRight])
             
             VStack(alignment: .leading, spacing: 8) {
