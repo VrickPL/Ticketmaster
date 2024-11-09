@@ -7,8 +7,17 @@
 
 import Foundation
 
-enum DefaultUrlBuilderError: Error {
+enum DefaultUrlBuilderError: LocalizedError {
     case invalidPath, invalidUrl
+    
+    var errorDescription: String? {
+            switch self {
+            case .invalidPath:
+                return "Unable to create URL from the provided path."
+            case .invalidUrl:
+                return "Unable to create a valid URL from the given components."
+            }
+        }
 }
 
 enum DefaultUrlBuilder {
@@ -17,7 +26,7 @@ enum DefaultUrlBuilder {
             throw DefaultUrlBuilderError.invalidPath
         }
 
-        urlComponentes.queryItems = buildQueryParams(api.parameters, ["api_key": NetworkKey.apiKey])
+        urlComponentes.queryItems = buildQueryParams(api.parameters, ["apikey": NetworkKey.apiKey])
         guard let url = urlComponentes.url else {
             throw DefaultUrlBuilderError.invalidUrl
         }

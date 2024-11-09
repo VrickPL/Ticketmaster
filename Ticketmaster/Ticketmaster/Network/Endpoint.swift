@@ -8,7 +8,7 @@
 import Foundation
 
 enum Endpoint {
-    static let ticketmasterUrl = "https://app.ticketmaster.com/discovery/v2/events"
+    private static let ticketmasterUrl = "https://app.ticketmaster.com/discovery/v2/events"
     
     case events, event(eventId: Int)
     
