@@ -123,7 +123,9 @@ struct SingleEventView: View {
         embedded: Embedded2(
             venues: [Venue(
                 name: "Centrum Tradycji Hutnictwa",
-                city: City(name: "Ostrowiec Świętokrzyski")
+                city: City(name: "Ostrowiec Świętokrzyski"),
+                country: Country(name: "Poland"),
+                address: Address(line1: "")
             )]
         ),
         images: [

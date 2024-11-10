@@ -99,20 +99,20 @@ struct EventsView: View {
     }
     
     private struct EventRowView: View {
-            let event: Event
-            let onAppear: () -> Void
-            
-            var body: some View {
-                ZStack {
-                    SingleEventView(event: event)
-                        .onAppear(perform: onAppear)
-                    
-                    NavigationLink(destination: EventDetailsView(id: event.id)) {
-                        EmptyView()
-                    }.opacity(0.0)
-                }
+        let event: Event
+        let onAppear: () -> Void
+        
+        var body: some View {
+            ZStack {
+                SingleEventView(event: event)
+                    .onAppear(perform: onAppear)
+                
+                NavigationLink(destination: EventDetailsView(id: event.id)) {
+                    EmptyView()
+                }.opacity(0.0)
             }
         }
+    }
 }
 
 #Preview {
