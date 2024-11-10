@@ -9,13 +9,12 @@ import SwiftUI
 
 struct EventsView: View {
     @StateObject private var viewModel = EventsViewModel()
+    @State private var showingSortOptions = false
 
     var body: some View {
         NavigationView {
             if let error = viewModel.error, viewModel.events.isEmpty {
-                ErrorView(error: error) {
-                    fetchEvents()
-                }
+                ErrorView(error: error, onButtonClick: fetchEvents)
             } else {
                 List {
                     if viewModel.isLoading && viewModel.events.isEmpty {
@@ -50,6 +49,14 @@ struct EventsView: View {
                     refresh()
                 }
                 .navigationTitle("Events in Poland")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        SortMenuView(
+                            onButtonClick: updateSort,
+                            selectedOption: viewModel.selectedSort
+                        )
+                    }
+                }
             }
         }
         .task {
@@ -75,6 +82,12 @@ struct EventsView: View {
         }
     }
     
+    private func updateSort(for sortOption: EventSortOption?) {
+        Task {
+            await viewModel.updateSort(for: sortOption)
+        }
+    }
+    
     private struct EventRowView: View {
         let event: Event
         let onAppear: () -> Void
@@ -86,7 +99,36 @@ struct EventsView: View {
                 
                 NavigationLink(destination: EventDetailsView(id: event.id)) {
                     EmptyView()
-                }.opacity(0.0)
+                }
+                .opacity(0.0)
+            }
+        }
+    }
+    
+    private struct SortMenuView: View {
+        var onButtonClick: (EventSortOption?) -> Void
+        var selectedOption: EventSortOption?
+
+        var body: some View {
+            Menu {
+                ForEach(EventSortOption.allCases, id: \.self) { option in
+                    Button {
+                        if option != selectedOption {
+                            onButtonClick(option)
+                        } else {
+                            onButtonClick(nil)
+                        }
+                    } label: {
+                        HStack {
+                            Text(option.displayName)
+                            if selectedOption == option {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } label: {
+                Label("Sort", systemImage: "arrow.up.arrow.down")
             }
         }
     }
