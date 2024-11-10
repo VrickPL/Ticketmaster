@@ -75,29 +75,6 @@ struct EventsView: View {
         }
     }
     
-    private struct ErrorView: View {
-        let error: Error
-        var onButtonClick: () -> Void
-        
-        var body: some View {
-            VStack {
-                Spacer()
-                Text("Oops, something went wrong!")
-                    .font(.title3)
-
-                Button("Try again") {
-                    onButtonClick()
-                }
-                .foregroundStyle(.blue)
-                .font(.title2)
-                Spacer()
-                
-                Text(error.localizedDescription)
-                    .foregroundStyle(.red)
-            }
-        }
-    }
-    
     private struct EventRowView: View {
         let event: Event
         let onAppear: () -> Void

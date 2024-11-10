@@ -19,51 +19,65 @@ struct EventDetailsView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                if let error = viewModel.error {
-                    Text(error.localizedDescription)
-                } else if let event = viewModel.event {
-                    TabView {
-                        ForEach(event.images, id: \.url) { image in
-                            EventImageView(image: image, defaultHeight: height)
+        if let error = viewModel.error {
+            ErrorView(error: error, onButtonClick: refresh)
+        } else {
+            ScrollView {
+                if viewModel.isLoading {
+                    SkeletonEventDetailsView()
+                } else {
+                    VStack(spacing: 0) {
+                        if let event = viewModel.event {
+                            TabView {
+                                ForEach(event.images, id: \.url) { image in
+                                    EventImageView(image: image, defaultHeight: height)
+                                }
+                            }
+                            .tabViewStyle(.page)
+                            .frame(height: height)
+                            .indexViewStyle(.page(backgroundDisplayMode: .always))
+                            
+                            VStack(alignment: .leading, spacing: 24) {
+                                GeneralInfoView(
+                                    name: event.name,
+                                    artist: event.artist,
+                                    dateTime: event.dateTime
+                                )
+                                
+                                BuyTicketsButton(url: event.url)
+                                
+                                LocationView(
+                                    country: event.country,
+                                    city: event.city,
+                                    venue: event.venue,
+                                    address: event.address
+                                )
+                                
+                                DetailsView(
+                                    genres: event.genres,
+                                    priceRanges: event.priceRanges?.first
+                                )
+                                
+                                SeatedView(seatmapUrl: event.seatmapUrl)
+                            }
+                            .padding()
+                        } else {
+                            ErrorView(onButtonClick: refresh)
                         }
                     }
-                    .tabViewStyle(.page)
-                    .frame(height: height)
-                    .indexViewStyle(.page(backgroundDisplayMode: .always))
-                    
-                    VStack(alignment: .leading, spacing: 24) {
-                        GeneralInfoView(
-                            name: event.name,
-                            artist: event.artist,
-                            dateTime: event.dateTime
-                        )
-                        
-                        BuyTicketsButton(url: event.url)
-                        
-                        LocationView(
-                            country: event.country,
-                            city: event.city,
-                            venue: event.venue,
-                            address: event.address
-                        )
-                        
-                        DetailsView(
-                            genres: event.genres,
-                            priceRanges: event.priceRanges?.first
-                        )
-                        
-                        SeatedView(seatmapUrl: event.seatmapUrl)
-                    }
-                    .padding()
                 }
             }
+            .background(Color(.systemBackground))
+            .navigationBarTitleDisplayMode(.inline)
+            .task {
+                await viewModel.fetchEventDetails()
+            }
         }
-        .background(Color(.systemBackground))
-        .navigationBarTitleDisplayMode(.inline)
-        .task {
-            await viewModel.fetchEventDetails()
+    }
+    
+    private func refresh() {
+        Task {
+            await viewModel.refresh()
         }
     }
     
