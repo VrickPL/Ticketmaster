@@ -15,7 +15,7 @@ enum NetworkServiceError: LocalizedError {
         case .invalidResponse(let statusCode):
             return "Invalid response from server (status code: \(statusCode))"
         case .invalidApiKey:
-            return "Invalid ApiKey.\nPlease check your configuration in Ticketmaster/Network/NetworkKey.swift."
+            return "Invalid ApiKey.\nPlease check your configuration in Ticketmaster/Network/NetworkKey.swift"
         }
     }
 }

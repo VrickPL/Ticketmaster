@@ -23,9 +23,18 @@ struct SingleEventView: View {
         isDarkScheme ? Color.gray.opacity(0.2) : .clear
     }
     
+    private var imageHeight: CGFloat {
+        UIScreen.main.bounds.width * 3 / 5
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            EventImageView(imageUrl: event.getImageUrl(for: "3_2"))
+            EventImageView(
+                image: event.getImage(for: ImageRatio.ratio_3_2),
+                defaultHeight: imageHeight,
+                roundedTopCorners: true,
+                multiplier: 0.9
+            )
             
             VStack(alignment: .leading, spacing: 8) {
                 Text(event.name)
@@ -34,15 +43,15 @@ struct SingleEventView: View {
                     .lineLimit(2)
                 
                 if let date = event.date, !date.isEmpty {
-                    EventInfoRow(icon: "calendar", text: date)
+                    InfoRow(icon: "calendar", text: date)
                 }
                 
                 if let venue = event.venue, !venue.isEmpty {
-                    EventInfoRow(icon: "mappin.and.ellipse", text: venue)
+                    InfoRow(icon: "mappin.and.ellipse", text: venue)
                 }
                 
                 if let city = event.city, !city.isEmpty {
-                    EventInfoRow(icon: "building.2", text: city)
+                    InfoRow(icon: "building.2", text: city)
                 }
             }
             .padding(.horizontal)
@@ -56,79 +65,25 @@ struct SingleEventView: View {
                 .stroke(cardStrokeColor, lineWidth: 1)
         )
     }
-    
-    private struct EventImageView: View {
-        let imageUrl: String?
-        
-        private var screenWidth: CGFloat {
-            UIScreen.main.bounds.width
-        }
-        
-        private var height: CGFloat {
-            screenWidth * 3 / 5
-        }
-        
-        var body: some View {
-            VStack {
-                if let imageUrl = imageUrl {
-                    AsyncImage(url: URL(string: imageUrl)) { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } placeholder: {
-                        ImagePlaceholder()
-                    }
-                } else {
-                    ImagePlaceholder()
-                }
-            }
-            .frame(height: height)
-            .clipped()
-            .roundedCorner(12, corners: [.topLeft, .topRight])
-        }
-        
-        private struct ImagePlaceholder: View {
-            var body: some View {
-                ZStack {
-                    Rectangle()
-                        .foregroundColor(.gray.opacity(0.2))
-                    
-                    ProgressView()
-                }
-            }
-        }
-    }
-    
-    private struct EventInfoRow: View {
-        let icon: String
-        let text: String
-        
-        var body: some View {
-            Label {
-                Text(text)
-                    .foregroundColor(.secondary)
-            } icon: {
-                Image(systemName: icon)
-                    .foregroundColor(.primary)
-            }
-        }
-    }
 }
 
 #Preview {
     SingleEventView(event: Event(
         id: "Z698xZQpZ16v-90S1o",
         name: "Rafał Pacześ - ProkuraTOUR'a - nowy program Stand-UP",
-        dates: Dates(start: Start(localDate: "2024-11-09")),
+        dates: Dates(start: Start(localDate: "2024-11-09", localTime: nil)),
         embedded: Embedded2(
             venues: [Venue(
                 name: "Centrum Tradycji Hutnictwa",
-                city: City(name: "Ostrowiec Świętokrzyski")
+                city: City(name: "Ostrowiec Świętokrzyski"),
+                country: Country(name: "Poland"),
+                address: Address(line1: "")
             )]
         ),
         images: [
             ImageDecodable(
-                ratio: nil, url: "https://s1.ticketm.net/dam/a/0b0/250689a8-4025-4351-a91a-98038cfe60b0_TABLET_LANDSCAPE_3_2.jpg"
+                ratio: nil,
+                url: "https://s1.ticketm.net/dam/a/0b0/250689a8-4025-4351-a91a-98038cfe60b0_TABLET_LANDSCAPE_3_2.jpg"
             )
         ]
     )

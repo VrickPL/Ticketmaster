@@ -30,7 +30,7 @@ enum DefaultUrlBuilder {
         guard let url = urlComponentes.url else {
             throw DefaultUrlBuilderError.invalidUrl
         }
-
+        
         return url
     }
 

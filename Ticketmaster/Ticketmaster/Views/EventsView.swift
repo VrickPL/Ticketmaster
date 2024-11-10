@@ -25,13 +25,13 @@ struct EventsView: View {
                         }
                     } else {
                         ForEach(viewModel.events) { event in
-                            SingleEventView(event: event)
-                                .onAppear {
-                                    if event.id == viewModel.events.last?.id {
-                                        fetchNextPage()
-                                    }
+                            EventRowView(event: event) {
+                                if event.id == viewModel.events.last?.id {
+                                    fetchNextPage()
                                 }
-                                .listRowSeparator(.hidden)
+                            }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color(.systemBackground))
                         }
                         
                         if let error = viewModel.error {
@@ -75,25 +75,18 @@ struct EventsView: View {
         }
     }
     
-    private struct ErrorView: View {
-        let error: Error
-        var onButtonClick: () -> Void
+    private struct EventRowView: View {
+        let event: Event
+        let onAppear: () -> Void
         
         var body: some View {
-            VStack {
-                Spacer()
-                Text("Oops, something went wrong!")
-                    .font(.title3)
-
-                Button("Try again") {
-                    onButtonClick()
-                }
-                .foregroundStyle(.blue)
-                .font(.title2)
-                Spacer()
+            ZStack {
+                SingleEventView(event: event)
+                    .onAppear(perform: onAppear)
                 
-                Text(error.localizedDescription)
-                    .foregroundStyle(.red)
+                NavigationLink(destination: EventDetailsView(id: event.id)) {
+                    EmptyView()
+                }.opacity(0.0)
             }
         }
     }
