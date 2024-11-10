@@ -14,6 +14,7 @@ class EventsViewModel: ObservableObject {
     private var currentPage = 0
     private var totalPages: Int?
 
+    @Published var selectedSort: EventSortOption? = nil
     @Published var events: [Event] = []
     @Published var isLoading = false
     @Published var error: Error?
@@ -27,10 +28,14 @@ class EventsViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            let parameters = [
+            var parameters = [
                 "countryCode": EventsViewModel.COUNTRY_CODE,
                 "page": String(currentPage)
             ]
+            if let selectedSort = selectedSort {
+                parameters["sort"] = selectedSort.rawValue
+            }
+
             let apiConstructor = ApiConstructor(endpoint: Endpoint.events, parameters: parameters)
             let response: EventsResponse = try await NetworkManager.shared.fetchData(api: apiConstructor)
             
@@ -56,5 +61,10 @@ class EventsViewModel: ObservableObject {
         self.events = []
         self.currentPage = 0
         await fetchEvents()
+    }
+    
+    func updateSort(for sortOption: EventSortOption?) async {
+        self.selectedSort = sortOption
+        await refresh()
     }
 }
