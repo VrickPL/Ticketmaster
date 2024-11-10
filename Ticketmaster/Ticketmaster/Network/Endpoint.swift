@@ -7,8 +7,12 @@
 
 import Foundation
 
-enum Endpoint {
-    private static let ticketmasterUrl = "https://app.ticketmaster.com/discovery/v2/events"
+protocol EndpointProtocol {
+    var fullPath: String { get }
+}
+
+enum Endpoint: EndpointProtocol {
+    static let ticketmasterUrl = "https://app.ticketmaster.com/discovery/v2/events"
     
     case events, event(eventId: String)
     
