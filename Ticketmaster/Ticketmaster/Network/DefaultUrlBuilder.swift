@@ -11,13 +11,13 @@ enum DefaultUrlBuilderError: LocalizedError {
     case invalidPath, invalidUrl
     
     var errorDescription: String? {
-            switch self {
-            case .invalidPath:
-                return "Unable to create URL from the provided path."
-            case .invalidUrl:
-                return "Unable to create a valid URL from the given components."
-            }
+        switch self {
+        case .invalidPath:
+            return "Unable to create URL from the provided path."
+        case .invalidUrl:
+            return "Unable to create a valid URL from the given components."
         }
+    }
 }
 
 enum DefaultUrlBuilder {

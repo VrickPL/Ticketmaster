@@ -77,4 +77,5 @@ extension EventDetails {
     var genres: String? { classifications.compactMap{ $0.genre.name }.joined(separator: ", ") }
     var seatmapUrl: String? { seatmap?.staticUrl }
     var artist: String? { embedded.attractions?.first?.name }
+    var priceRange: PriceRange? { priceRanges?.first }
 }

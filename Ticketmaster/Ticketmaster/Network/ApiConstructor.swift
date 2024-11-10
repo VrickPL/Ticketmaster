@@ -10,6 +10,6 @@ import Foundation
 typealias Parameters = [String: String]
 
 struct ApiConstructor {
-    let endpoint: Endpoint
+    let endpoint: EndpointProtocol
     var parameters = Parameters()
 }

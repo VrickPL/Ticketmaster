@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum NetworkServiceError: LocalizedError {
+enum NetworkServiceError: LocalizedError, Equatable {
     case invalidResponse(statusCode: Int), invalidApiKey
     
     var errorDescription: String? {
@@ -21,9 +21,15 @@ enum NetworkServiceError: LocalizedError {
 }
 
 actor NetworkService {
+    private let session: URLSessionProtocol
+    
+    init(session: URLSessionProtocol = URLSession.shared) {
+        self.session = session
+    }
+    
     func fetchData<T: Decodable>(api: ApiConstructor) async throws -> T {
         let url = try DefaultUrlBuilder.build(api: api)
-        let (data, response) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await session.data(from: url)
 
         guard let httpResponse = response as? HTTPURLResponse else {
             throw NetworkServiceError.invalidResponse(statusCode: 0)
