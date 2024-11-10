@@ -37,7 +37,10 @@ struct SkeletonEventView: View {
             .padding(.bottom)
         }
         .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+        )
         .opacity(isAnimating ? 0.6 : 1)
         .animation(.easeInOut(duration: 1).repeatForever(), value: isAnimating)
         .onAppear {
