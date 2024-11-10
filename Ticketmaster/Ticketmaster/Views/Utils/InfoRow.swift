@@ -18,6 +18,8 @@ struct InfoRow: View {
         } icon: {
             Image(systemName: icon)
                 .foregroundColor(.primary)
+                .frame(width: 20)
+                .imageScale(.medium)
         }
     }
 }

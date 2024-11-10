@@ -112,10 +112,10 @@ struct EventDetailsView: View {
                     InfoRow(icon: "building.2", text: city)
                 }
                 if let venue = venue {
-                    InfoRow(icon: "building", text: venue)
+                    InfoRow(icon: "mappin.and.ellipse", text: venue)
                 }
                 if let address = address {
-                    InfoRow(icon: "mappin.and.ellipse", text: address)
+                    InfoRow(icon: "map", text: address)
                 }
             }
         }
@@ -140,7 +140,7 @@ struct EventDetailsView: View {
                 if let priceRange = priceRanges {
                     InfoRow(
                         icon: "ticket",
-                        text: "Tickets from \(priceRange.currency) \(String(format: "%.2f", priceRange.min))"
+                        text: "Tickets from \(String(format: "%.2f", priceRange.min)) \(priceRange.currency)"
                     )
                 }
             }
