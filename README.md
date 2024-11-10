@@ -45,7 +45,7 @@ The app’s UI is designed to adapt easily to different screen sizes and is full
 
 
 ## Splash Screen
-Upon launching, the app displays a splash screen, providing a smooth introduction to the experience.
+Upon launching, the app displays a splash screen.
 
 
 
