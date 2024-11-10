@@ -55,7 +55,7 @@ struct EventDetailsView: View {
                                 
                                 DetailsView(
                                     genres: event.genres,
-                                    priceRanges: event.priceRanges?.first
+                                    priceRanges: event.priceRange
                                 )
                                 
                                 SeatedView(seatmapUrl: event.seatmapUrl)
