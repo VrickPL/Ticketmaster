@@ -114,12 +114,12 @@ extension Event {
     var city: String? { embedded?.venues?.first?.city.name }
     var venue: String? { embedded?.venues?.first?.name }
     
-    func getImageUrl(for ratio: String? = nil) -> String? {
-        if let ratio = ratio, let image = images?.first(where: { $0.ratio == ratio }) {
-            return image.url
+    func getImage(for ratio: ImageRatio? = nil) -> ImageDecodable? {
+        if let ratio = ratio, let image = images?.first(where: { $0.imageRatio == ratio }) {
+            return image
         }
         
-        return images?.first?.url
+        return images?.first
     }
 }
 

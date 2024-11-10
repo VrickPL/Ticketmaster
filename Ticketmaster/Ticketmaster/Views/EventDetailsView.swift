@@ -170,62 +170,6 @@ struct EventDetailsView: View {
         }
     }
     
-    private struct EventImageView: View {
-        let image: ImageDecodable?
-        let defaultHeight: CGFloat
-        
-        var height: CGFloat {
-            if let multiplier = image?.imageRatio?.multiplier {
-                UIScreen.main.bounds.width * multiplier
-            } else {
-                defaultHeight
-            }
-        }
-        
-        var body: some View {
-            VStack {
-                if let image = image {
-                    AsyncImage(url: URL(string: image.url)) { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } placeholder: {
-                        ImagePlaceholder()
-                    }
-                } else {
-                    ImagePlaceholder()
-                }
-            }
-            .frame(height: height)
-        }
-        
-        private struct ImagePlaceholder: View {
-            var body: some View {
-                ZStack {
-                    Rectangle()
-                        .foregroundColor(.gray.opacity(0.2))
-                    
-                    ProgressView()
-                }
-            }
-        }
-    }
-    
-    private struct InfoRow: View {
-        let icon: String
-        let text: String
-        
-        var body: some View {
-            Label {
-                Text(text)
-                    .foregroundColor(.secondary)
-            } icon: {
-                Image(systemName: icon)
-                    .foregroundColor(.primary)
-            }
-        }
-    }
-    
     private struct BuyTicketsButton: View {
         let url: String
 
