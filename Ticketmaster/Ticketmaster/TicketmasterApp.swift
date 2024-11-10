@@ -11,7 +11,7 @@ import SwiftUI
 struct TicketmasterApp: App {
     var body: some Scene {
         WindowGroup {
-            EventsView()
+            SplashScreen()
         }
     }
 }
