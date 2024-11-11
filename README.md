@@ -23,6 +23,7 @@ This iOS app enables users to discover and explore events in Poland with detaile
 ## Configuration
 To check how the app works after cloning this repo, simply navigate to the `NetworkKey` file *(Ticketmaster/Network/NetworkKey.swift)* and paste your API key.
 
+![image](https://github.com/user-attachments/assets/5a856bd3-0616-4236-9d5f-2b2ba2fd128d)
 
 
 
@@ -53,5 +54,6 @@ Upon launching, the app displays a splash screen.
 ## Unit Tests
 The app is carefully unit tested using **XCTest** to ensure the reliability of models and network calls, ensuring confidence in its functionality and stability.
 
+![image](https://github.com/user-attachments/assets/ccc672fd-2fcb-49f3-99d1-58fd1f268363)
 
 
