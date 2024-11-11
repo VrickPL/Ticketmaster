@@ -20,8 +20,8 @@ final class NetworkServiceTests: XCTestCase {
         networkService = NetworkService(session: mockSession)
     }
     
-    // MARK: mocked structs
-    struct MockURLSession: URLSessionProtocol {
+    // MARK: mocked classes/structs
+    class MockURLSession: URLSessionProtocol {
         var mockData: Data?
         var mockResponse: URLResponse?
         var mockError: Error?
